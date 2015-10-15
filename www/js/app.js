@@ -33,6 +33,7 @@ angular.module('todo', ['ionic'])
   })
 
   .controller('TodoController', function($scope, $timeout, $ionicModal, Projects, $ionicSideMenuDelegate) {
+    
     var createProject = function(projectTitle) {
       var newProject = Projects.newProject(projectTitle);
       $scope.projects.push(newProject);
@@ -70,14 +71,13 @@ angular.module('todo', ['ionic'])
       $scope.activeProject.tasks.push({
         title: task.title
       });
-      $scope.taskModal.hide();
+      $scope.taskModal.show();
 
       Projects.save($scope.projects);
 
       task.title = '';
     }
-    $scope.tasks = []; //task in tasks
-
+   
     $scope.newTask = function() {
       $scope.taskModal.show();
     };
@@ -85,17 +85,33 @@ angular.module('todo', ['ionic'])
     $scope.closeNewTask = function() {
       $scope.taskModal.hide();
     };
-  });
 
-// .run(function($ionicPlatform) {
-//   $ionicPlatform.ready(function() {
-//     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-//     // for form inputs)
-//     if(window.cordova && window.cordova.plugins.Keyboard) {
-//       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-//     }
-//     if(window.StatusBar) {
-//       StatusBar.styleDefault();
-//     }
-//   });
-// })
+    $scope.toggleProjects = function() {
+      $ionicSideMenuDelegate.toggleLeft();
+    };
+
+    $timeout(function() {
+      if($scope.projects.length == 0) {
+        while(true) {
+          var projectTitle = prompt('Your first project title:');
+          if(projectTitle) {
+            createProject(projectTitle);
+            break;
+          }
+        }
+      }
+    });
+  })
+
+.run(function($ionicPlatform) {
+  $ionicPlatform.ready(function() {
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+    // for form inputs)
+    if(window.cordova && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    }
+    if(window.StatusBar) {
+      StatusBar.styleDefault();
+    }
+  });
+})
