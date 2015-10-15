@@ -71,7 +71,7 @@ angular.module('todo', ['ionic'])
       $scope.activeProject.tasks.push({
         title: task.title
       });
-      $scope.taskModal.show();
+      $scope.taskModal.hide();
 
       Projects.save($scope.projects);
 
